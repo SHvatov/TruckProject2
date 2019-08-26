@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <property name="LOGS" value="logs" />
+    <appender name="Console"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="LogFile" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS}/file.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <!-- LOG everything at INFO level -->
+    <root level="info">
+        <appender-ref ref="Console" />
+        <appender-ref ref="LogFile" />
+    </root>
+
+    <!-- LOG "com.ishvatov*" at DEBUG level -->
+    <logger name="com.ishvatov" level="debug" additivity="false">
+        <appender-ref ref="Console" />
+        <appender-ref ref="LogFile" />
+    </logger>
+
+</configuration>
