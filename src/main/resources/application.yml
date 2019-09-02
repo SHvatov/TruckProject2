@@ -6,7 +6,7 @@ spring:
 
   # datasource properties
   datasource:
-    url: jdbc:mysql://localhost:3306/truck_db2?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/truck_db3?serverTimezone=UTC
     username: root
     password: 1999Sergey
 
@@ -18,16 +18,6 @@ spring:
       hibernate.show_sql: true
       hibernate.format_sql: true
     open-in-view: true
-
-  # MVC configuration properties
-  mvc:
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp
-
-  # Resources configuration
-  resources:
-    static-locations: /resources/
 
   # Messages resource config
   messages:

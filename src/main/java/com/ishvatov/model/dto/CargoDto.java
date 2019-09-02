@@ -3,7 +3,6 @@ package com.ishvatov.model.dto;
 import com.ishvatov.model.enums.CargoStatusType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
@@ -16,8 +15,12 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class CargoDto extends AbstractDto<Integer> {
+public class CargoDto implements AbstractDto {
+
+    /**
+     * Unique identificator of the object.
+     */
+    protected Integer id;
 
     /**
      * Name of the cargo.
@@ -33,6 +36,16 @@ public class CargoDto extends AbstractDto<Integer> {
      * Status of the cargo.
      */
     private CargoStatusType status;
+
+    /**
+     * Latitude of the object on the map.
+     */
+    private Double latitude;
+
+    /**
+     * Longitude of the object on the map.
+     */
+    private Double longitude;
 
     /**
      * Set of ids of the waypoints,

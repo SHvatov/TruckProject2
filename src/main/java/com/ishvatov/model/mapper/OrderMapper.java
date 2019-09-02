@@ -1,6 +1,6 @@
 package com.ishvatov.model.mapper;
 
-import com.ishvatov.exception.DaoException;
+import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.OrderDto;
 import com.ishvatov.model.entity.*;
 import com.ishvatov.model.repository.DriverRepository;
@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
  * @author Sergey Khvatov
  */
 @Component
-public class OrderMapper extends AbstractMapper<Integer, OrderEntity, OrderDto>
-    implements Mapper<Integer, OrderEntity, OrderDto> {
+public class OrderMapper extends AbstractMapper<OrderEntity, OrderDto>
+    implements Mapper<OrderEntity, OrderDto> {
 
     /**
      * Repository object, used to access Driver DAO.
@@ -148,7 +148,7 @@ public class OrderMapper extends AbstractMapper<Integer, OrderEntity, OrderDto>
         clearAssignedDrivers(entity);
         assignedDrivers.forEach(id -> {
             DriverEntity driverEntity = driverRepository.findById(id)
-                .orElseThrow(() -> new DaoException(getClass(), "setAssignedDrivers"));
+                .orElseThrow(() -> new DataBaseException("No entity with id: [" + id + "] exists"));
             Optional.ofNullable(driverEntity.getOrder()).ifPresent(e -> e.removeDriver(driverEntity));
             entity.addDriver(driverEntity);
         });
@@ -170,17 +170,17 @@ public class OrderMapper extends AbstractMapper<Integer, OrderEntity, OrderDto>
     /**
      * Updates the trucks set of the entity.
      *
-     * @param truckUID UID of the truck.
+     * @param truckId UID of the truck.
      * @param entity   Entity object.
      */
-    private void setTruck(String truckUID, OrderEntity entity) {
+    private void setTruck(String truckId, OrderEntity entity) {
         Optional.ofNullable(entity.getAssignedTruck()).ifPresent(e -> {
             e.setOrder(null);
             entity.setAssignedTruck(null);
         });
 
-        TruckEntity truckEntity = truckRepository.findById(truckUID)
-            .orElseThrow(() -> new DaoException(getClass(), "setTruck"));
+        TruckEntity truckEntity = truckRepository.findById(truckId)
+            .orElseThrow(() -> new DataBaseException("No entity with id: [" + truckId + "] exists"));
         entity.setAssignedTruck(truckEntity);
         truckEntity.setOrder(entity);
     }
@@ -205,9 +205,9 @@ public class OrderMapper extends AbstractMapper<Integer, OrderEntity, OrderDto>
      */
     private void setAssignedWaypoints(Set<Integer> assignedWaypoints, OrderEntity entity) {
         clearAssignedWaypoints(entity);
-        assignedWaypoints.forEach(uid -> {
-            WaypointEntity wayPointEntity = waypointRepository.findById(uid)
-                .orElseThrow(() -> new DaoException(getClass(), "setAssignedWaypoints"));
+        assignedWaypoints.forEach(id -> {
+            WaypointEntity wayPointEntity = waypointRepository.findById(id)
+                .orElseThrow(() -> new DataBaseException("No entity with id: [" + id + "] exists"));
             Optional.ofNullable(wayPointEntity.getOrder())
                 .ifPresent(e -> e.removeWaypoint(wayPointEntity));
             entity.addWaypoint(wayPointEntity);

@@ -1,6 +1,6 @@
 package com.ishvatov.model.mapper;
 
-import com.ishvatov.exception.DaoException;
+import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.WaypointDto;
 import com.ishvatov.model.entity.CargoEntity;
 import com.ishvatov.model.entity.OrderEntity;
@@ -22,8 +22,8 @@ import java.util.Optional;
  * @author Sergey Khvatov
  */
 @Component
-public class WaypointMapper extends AbstractMapper<Integer, WaypointEntity, WaypointDto>
-    implements Mapper<Integer, WaypointEntity, WaypointDto> {
+public class WaypointMapper extends AbstractMapper<WaypointEntity, WaypointDto>
+    implements Mapper<WaypointEntity, WaypointDto> {
 
     /**
      * Repository object, used to access Orders DAO.
@@ -115,7 +115,7 @@ public class WaypointMapper extends AbstractMapper<Integer, WaypointEntity, Wayp
         Optional.ofNullable(destination.getCargo())
             .ifPresent(cargoEntity -> cargoEntity.removeWaypoint(destination));
         CargoEntity cargoEntity = cargoRepository.findById(cargoId)
-            .orElseThrow(() -> new DaoException(getClass(), "setCargo"));
+            .orElseThrow(() -> new DataBaseException("No entity with id: [" + cargoId + "] exists"));
         cargoEntity.addWaypoint(destination);
     }
 
@@ -139,7 +139,7 @@ public class WaypointMapper extends AbstractMapper<Integer, WaypointEntity, Wayp
         Optional.ofNullable(destination.getOrder())
             .ifPresent(orderEntity -> orderEntity.removeWaypoint(destination));
         OrderEntity orderEntity = orderRepository.findById(orderId)
-            .orElseThrow(() -> new DaoException(getClass(), "setOrder"));
+            .orElseThrow(() -> new DataBaseException("No entity with id: [" + orderId + "] exists"));
         orderEntity.addWaypoint(destination);
     }
 

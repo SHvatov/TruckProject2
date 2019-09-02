@@ -1,6 +1,6 @@
 package com.ishvatov.model.mapper;
 
-import com.ishvatov.exception.DaoException;
+import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.DriverDto;
 import com.ishvatov.model.entity.DriverEntity;
 import com.ishvatov.model.entity.OrderEntity;
@@ -22,8 +22,8 @@ import java.util.Optional;
  * @author Sergey Khvatov
  */
 @Component
-public class DriverMapper extends AbstractMapper<String, DriverEntity, DriverDto>
-    implements Mapper<String, DriverEntity, DriverDto> {
+public class DriverMapper extends AbstractMapper<DriverEntity, DriverDto>
+    implements Mapper<DriverEntity, DriverDto> {
 
     /**
      * Repository object, used to access Truck DAO.
@@ -113,7 +113,7 @@ public class DriverMapper extends AbstractMapper<String, DriverEntity, DriverDto
         Optional.ofNullable(entity.getTruck()).ifPresent(truckEntity -> truckEntity.removeDriver(entity));
 
         TruckEntity truckEntity = truckRepository.findById(truckId)
-            .orElseThrow(() -> new DaoException(getClass(), "setTruck"));
+            .orElseThrow(() ->new DataBaseException("No entity with id: [" + truckId + "] exists"));
         truckEntity.addDriver(entity);
     }
 
@@ -136,7 +136,7 @@ public class DriverMapper extends AbstractMapper<String, DriverEntity, DriverDto
     private void setOrder(Integer orderId, DriverEntity entity) {
         Optional.ofNullable(entity.getOrder()).ifPresent(orderEntity -> orderEntity.removeDriver(entity));
         OrderEntity orderEntity = orderRepository.findById(orderId)
-            .orElseThrow(() -> new DaoException(getClass(), "setOrder"));
+            .orElseThrow(() -> new DataBaseException("No entity with id: [" + orderId + "] exists"));
         orderEntity.addDriver(entity);
     }
 

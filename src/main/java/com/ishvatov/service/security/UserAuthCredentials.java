@@ -1,4 +1,4 @@
-package com.ishvatov.security;
+package com.ishvatov.service.security;
 
 import com.ishvatov.model.entity.UserEntity;
 import lombok.AllArgsConstructor;

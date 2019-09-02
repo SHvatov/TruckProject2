@@ -3,7 +3,6 @@ package com.ishvatov.model.dto;
 import com.ishvatov.model.enums.TruckStatusType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
@@ -17,8 +16,12 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class TruckDto extends AbstractDto<String> {
+public class TruckDto implements AbstractDto {
+
+    /**
+     * Unique identificator of the object.
+     */
+    protected String id;
 
     /**
      * Truck's capacity in tons.

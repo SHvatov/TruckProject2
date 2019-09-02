@@ -1,7 +1,8 @@
 package com.ishvatov.service.inner;
 
-import com.ishvatov.exception.DaoException;
+import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.AbstractDto;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 
@@ -11,14 +12,15 @@ import java.util.List;
  * @param <T> DTO type.
  * @param <U> type of the unique key.
  */
-public interface BaseInnerService<U, T extends AbstractDto<U>> {
+public interface BaseInnerService<U, T extends AbstractDto> {
 
     /**
      * Finds entity by it's unique id.
      *
      * @param key unique key of the id.
      * @return Unique entity with this entity.
-     * @throws DaoException if no entity with such unique key exists.
+     * @throws DataBaseException        if no entity with such unique key exists.
+     * @throws IllegalArgumentException if id is null.
      */
     T find(U key);
 
@@ -26,19 +28,24 @@ public interface BaseInnerService<U, T extends AbstractDto<U>> {
      * Adds entity to the DB. Check if entity already exists.
      *
      * @param dto new entity to add.
-     * @throws DaoException if entity with this UID already exists
+     * @throws DataBaseException if entity with this UID already exists or if
+     *                           input data violates the integrity of the data in the database or
+     *                           if connection to the database is lost.
      */
     void save(T dto);
 
     /**
-     * Updates data in the database. If fields in teh DTO
+     * Updates data in the database. If fields in the DTO
      * are not null, then update them. If are null, then
      * if corresponding filed in the Entity is nullable,
      * then set it to null and remove all connections,
-     * otherwise throw NPE.
+     * otherwise throw {@link DataBaseException}
+     * because of the {@link DataIntegrityViolationException}.
      *
      * @param dto values to update in the entity.
-     * @throws DaoException if entity with this UID already exists
+     * @throws DataBaseException if entity with this UID does not exists or if
+     *                           input data violates the integrity of the data in the database or
+     *                           if connection to the database is lost.
      */
     void update(T dto);
 
@@ -46,6 +53,8 @@ public interface BaseInnerService<U, T extends AbstractDto<U>> {
      * Deletes entity from the DB if it exists.
      *
      * @param key UID of the entity.
+     * @throws IllegalArgumentException if key is null.
+     * @throws DataBaseException        if connection to the DB is lost.
      */
     void delete(U key);
 
@@ -61,6 +70,7 @@ public interface BaseInnerService<U, T extends AbstractDto<U>> {
      *
      * @param key key to check.
      * @return true, if this key is unique in the DB, false otherwise.
+     * @throws IllegalArgumentException if id is null.
      */
     boolean exists(U key);
 }

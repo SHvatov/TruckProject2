@@ -45,6 +45,30 @@ public class CargoEntity extends AbstractEntity<Integer> {
     public static final String NAME_FIELD = "name";
 
     /**
+     * String representation of the 'latitude'
+     * column name in the table.
+     */
+    public static final String LATITUDE_FIELD = "latitude";
+
+    /**
+     * String representation of the 'longitude'
+     * column name in the table.
+     */
+    public static final String LONGITUDE_FIELD = "longitude";
+
+    /**
+     * Latitude of the object on the map.
+     */
+    @Column(name = LATITUDE_FIELD)
+    private Double latitude;
+
+    /**
+     * Longitude of the object on the map.
+     */
+    @Column(name = LONGITUDE_FIELD)
+    private Double longitude;
+
+    /**
      * Name of the cargo.
      */
     @Column(name = NAME_FIELD)

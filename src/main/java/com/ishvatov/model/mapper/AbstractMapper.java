@@ -4,7 +4,6 @@ import com.ishvatov.model.dto.AbstractDto;
 import com.ishvatov.model.entity.AbstractEntity;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Objects;
@@ -13,16 +12,15 @@ import java.util.Objects;
  * Abstract mapper, which implements basic mapper interface. All its subclasses
  * must override protected methods in order to finish the mapping process.
  *
- * @param <V> type of the id of the object.
  * @param <E> type of the entity.
  * @param <T> type of the dto.
  * @author Sergey Khvatov
  */
-public abstract class AbstractMapper<V, E extends AbstractEntity<V>, T extends AbstractDto<V>>
-    implements Mapper<V, E, T> {
+public abstract class AbstractMapper<E extends AbstractEntity, T extends AbstractDto>
+    implements Mapper<E, T> {
 
     /**
-     * Autowired mapper instance.
+     * Mapper instance.
      */
     protected ModelMapper mapper;
 
@@ -47,10 +45,10 @@ public abstract class AbstractMapper<V, E extends AbstractEntity<V>, T extends A
         this.mapper = modelMapper;
         this.entityClass = (Class<E>) ((ParameterizedType) this.getClass()
             .getGenericSuperclass())
-            .getActualTypeArguments()[1];
+            .getActualTypeArguments()[0];
         this.dtoClass = (Class<T>) ((ParameterizedType) this.getClass()
             .getGenericSuperclass())
-            .getActualTypeArguments()[2];
+            .getActualTypeArguments()[1];
     }
 
     /**

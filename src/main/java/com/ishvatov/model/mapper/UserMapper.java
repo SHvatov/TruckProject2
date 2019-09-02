@@ -17,8 +17,8 @@ import javax.annotation.PostConstruct;
  * @author Sergey Khvatov
  */
 @Component
-public class UserMapper extends AbstractMapper<String, UserEntity, UserDto>
-    implements Mapper<String, UserEntity, UserDto> {
+public class UserMapper extends AbstractMapper<UserEntity, UserDto>
+    implements Mapper<UserEntity, UserDto> {
 
     /**
      * Coder instance.

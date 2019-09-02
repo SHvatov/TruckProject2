@@ -3,7 +3,6 @@ package com.ishvatov.model.dto;
 import com.ishvatov.model.enums.OrderStatusType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
@@ -20,8 +19,12 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class OrderDto extends AbstractDto<Integer> {
+public class OrderDto implements AbstractDto {
+
+    /**
+     * Unique identificator of the object.
+     */
+    protected Integer id;
 
     /**
      * Status of the order.

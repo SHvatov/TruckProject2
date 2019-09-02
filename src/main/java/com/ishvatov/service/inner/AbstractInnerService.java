@@ -1,14 +1,17 @@
 package com.ishvatov.service.inner;
 
-import com.ishvatov.exception.DaoException;
+import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.AbstractDto;
 import com.ishvatov.model.entity.AbstractEntity;
 import com.ishvatov.model.mapper.Mapper;
 import com.ishvatov.model.repository.BaseCrudRepository;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.datasource.lookup.DataSourceLookupFailureException;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Implementation of the basic CRUD methods, that are common for all
@@ -22,8 +25,8 @@ import java.util.stream.Collectors;
  * @author Sergey Khvatov
  */
 public abstract class AbstractInnerService<U,
-    T extends AbstractDto<U>,
-    V extends AbstractEntity<U>,
+    T extends AbstractDto,
+    V extends AbstractEntity,
     R extends BaseCrudRepository<U, V>>
     implements BaseInnerService<U, T> {
 
@@ -35,7 +38,7 @@ public abstract class AbstractInnerService<U,
     /**
      * Mapper instance.
      */
-    protected Mapper<U, V, T> mapper;
+    protected Mapper<V, T> mapper;
 
     /**
      * Default class constructor.
@@ -44,9 +47,64 @@ public abstract class AbstractInnerService<U,
      * @param mapper     mapper instance.
      */
     public AbstractInnerService(R repository,
-                                Mapper<U, V, T> mapper) {
+                                Mapper<V, T> mapper) {
         this.repository = repository;
         this.mapper = mapper;
+    }
+
+    /**
+     * Adds entity to the DB. Check if entity already exists.
+     *
+     * @param dto new entity to add.
+     * @throws DataBaseException if entity with this UID already exists or if
+     *                           input data violates the integrity of the data in the database or
+     *                           if connection to the database is lost.
+     */
+    @Override
+    public void save(T dto) {
+        try {
+            saveImpl(dto);
+        } catch (DataIntegrityViolationException | DataSourceLookupFailureException exception) {
+            throw new DataBaseException(exception);
+        }
+    }
+
+    /**
+     * Updates data in the database. If fields in the DTO
+     * are not null, then update them. If are null, then
+     * if corresponding filed in the Entity is nullable,
+     * then set it to null and remove all connections,
+     * otherwise throw {@link DataBaseException}
+     * because of the {@link DataIntegrityViolationException}.
+     *
+     * @param dto values to update in the entity.
+     * @throws DataBaseException if entity with this UID does not exists or if
+     *                           input data violates the integrity of the data in the database or
+     *                           if connection to the database is lost.
+     */
+    @Override
+    public void update(T dto) {
+        try {
+            updateImpl(dto);
+        } catch (DataIntegrityViolationException | DataSourceLookupFailureException exception) {
+            throw new DataBaseException(exception);
+        }
+    }
+
+    /**
+     * Deletes entity from the DB if it exists.
+     *
+     * @param key UID of the entity.
+     * @throws IllegalArgumentException if key is null.
+     * @throws DataBaseException        if connection to the DB is lost.
+     */
+    @Override
+    public void delete(U key) {
+        try {
+            deleteImpl(key);
+        } catch (DataSourceLookupFailureException exception) {
+            throw new DataBaseException(exception);
+        }
     }
 
     /**
@@ -54,12 +112,13 @@ public abstract class AbstractInnerService<U,
      *
      * @param key unique key of the id.
      * @return Unique entity with this entity.
-     * @throws DaoException if no entity with such unique key exists.
+     * @throws DataBaseException        if no entity with such unique key exists.
+     * @throws IllegalArgumentException if id is null.
      */
     @Override
     public T find(U key) {
         V entity = repository.findById(key)
-            .orElseThrow(() -> new DaoException(getClass(), "find"));
+            .orElseThrow(() -> new DataBaseException("No entity with id: [" + key + "] exists"));
         return mapper.map(entity);
     }
 
@@ -70,8 +129,7 @@ public abstract class AbstractInnerService<U,
      */
     @Override
     public List<T> findAll() {
-        return repository.findAll()
-            .stream()
+        return StreamSupport.stream(repository.findAll().spliterator(), false)
             .filter(Objects::nonNull)
             .map(mapper::map)
             .collect(Collectors.toList());
@@ -82,9 +140,34 @@ public abstract class AbstractInnerService<U,
      *
      * @param key key to check.
      * @return true, if this key is unique in the DB, false otherwise.
+     * @throws IllegalArgumentException if id is null.
      */
     @Override
     public boolean exists(U key) {
         return repository.existsById(key);
     }
+
+    /**
+     * Implementation of the save method, that must be
+     * implemented in the child class.
+     *
+     * @param dto DTO object.
+     */
+    protected abstract void saveImpl(T dto);
+
+    /**
+     * Implementation of the update method, that must be
+     * implemented in the child class.
+     *
+     * @param dto DTO object.
+     */
+    protected abstract void updateImpl(T dto);
+
+    /**
+     * Implementation of the delete method, that must be
+     * implemented in the child class.
+     *
+     * @param key unique id of the object.
+     */
+    protected abstract void deleteImpl(U key);
 }

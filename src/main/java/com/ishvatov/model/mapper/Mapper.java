@@ -7,11 +7,10 @@ import com.ishvatov.model.entity.AbstractEntity;
  * Basic interface which defines methods, that are used to map objects from
  * dto to entity and back.
  *
- * @param <V> type of the id of the object.
  * @param <E> type of the entity object.
  * @param <T> type of the dto object.
  */
-public interface Mapper<V, E extends AbstractEntity<V>, T extends AbstractDto<V>> {
+public interface Mapper<E extends AbstractEntity, T extends AbstractDto> {
 
     /**
      * Converts entity object into DTO.

@@ -1,6 +1,5 @@
 package com.ishvatov.config;
 
-import com.ishvatov.handler.SuccessLoginHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -10,9 +9,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 /**
  * Security configuration class.
@@ -21,14 +21,22 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
  */
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackages = {"com.ishvatov"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * {@link UserDetailsService} instance.
      */
-    @Autowired
     private UserDetailsService userDetailsService;
+
+    /**
+     * Default class constructor, used for the field injection.
+     *
+     * @param userDetailsService {@link UserDetailsService} instance.
+     */
+    @Autowired
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     /**
      * Configure {@link DaoAuthenticationProvider} object.
@@ -55,18 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Creates an instance of the {@link SuccessLoginHandler}, which
-     * implements {@link AuthenticationSuccessHandler} and is used
-     * to redirect users according to their roles.
-     *
-     * @return Singleton instance of the {@link SuccessLoginHandler}.
-     */
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new SuccessLoginHandler();
-    }
-
-    /**
      * Implementation of the configure method.
      *
      * @param auth {@link AuthenticationManagerBuilder} instance.
@@ -83,30 +79,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-            // mapToDto user permissions
-            .antMatchers("/login/**").permitAll()
-            .antMatchers("/resources/**").permitAll()
-            .antMatchers("/error/**").permitAll()
+        http.httpBasic()
+            .and()
+            .authorizeRequests()
+            .antMatchers("/login/authenticate").permitAll()
             .antMatchers("/employee/**").hasRole("USER")
             .antMatchers("/driver/**").hasRole("DRIVER")
-            .antMatchers("/", "/**").hasRole("ADMIN")
             .anyRequest().authenticated()
-            // configure login process
             .and()
-            .formLogin()
-            .loginPage("/login/login")
-            .successHandler(authenticationSuccessHandler())
-            .loginProcessingUrl("/login/perform_login")
-            .failureUrl("/login/login_failed")
-            // configure logout process
-            .and()
-            .logout()
-            .logoutUrl("/login/perform_logout")
-            .deleteCookies("JSESSIONID")
-            .invalidateHttpSession(true);
-
-        // disable csrf
-        http.csrf().disable();
+            .sessionManagement().disable()
+            .csrf().disable()
+            .formLogin().disable();
     }
 }

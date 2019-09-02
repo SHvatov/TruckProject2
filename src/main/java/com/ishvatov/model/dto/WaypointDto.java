@@ -4,7 +4,6 @@ import com.ishvatov.model.enums.CargoActionType;
 import com.ishvatov.model.enums.WaypointStatusType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -15,8 +14,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class WaypointDto extends AbstractDto<Integer> {
+public class WaypointDto implements AbstractDto {
+
+    /**
+     * Unique identificator of the object.
+     */
+    protected Integer id;
 
     /**
      * Defines whether cargo is being loaded or

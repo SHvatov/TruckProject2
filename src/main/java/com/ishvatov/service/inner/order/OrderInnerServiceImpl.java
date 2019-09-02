@@ -1,6 +1,6 @@
 package com.ishvatov.service.inner.order;
 
-import com.ishvatov.exception.DaoException;
+import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.OrderDto;
 import com.ishvatov.model.entity.DriverEntity;
 import com.ishvatov.model.entity.OrderEntity;
@@ -36,20 +36,20 @@ public class OrderInnerServiceImpl
      */
     @Autowired
     public OrderInnerServiceImpl(OrderRepository repository,
-                                 Mapper<Integer, OrderEntity, OrderDto> mapper) {
+                                 Mapper<OrderEntity, OrderDto> mapper) {
         super(repository, mapper);
     }
 
     /**
-     * Adds entity to the DB. Check if entity already exists.
+     * Implementation of the save method, that must be
+     * implemented in the child class.
      *
-     * @param dto new entity to add.
-     * @throws DaoException if entity with this UID already exists
+     * @param dto DTO object.
      */
     @Override
-    public void save(OrderDto dto) {
+    protected void saveImpl(OrderDto dto) {
         if (exists(dto.getId())) {
-            throw new DaoException(getClass(), "save", "Entity with such UID already exists");
+            throw new DataBaseException("Entity with such UID already exists");
         } else {
             OrderEntity entity = new OrderEntity();
             mapper.map(dto, entity);
@@ -58,30 +58,27 @@ public class OrderInnerServiceImpl
     }
 
     /**
-     * Updates data in the database. If fields in teh DTO
-     * are not null, then update them. If are null, then
-     * if corresponding filed in the Entity is nullable,
-     * then set it to null and remove all connections,
-     * otherwise throw VE.
+     * Implementation of the update method, that must be
+     * implemented in the child class.
      *
-     * @param dto values to update in the entity.
-     * @throws DaoException if entity with this UID already exists
+     * @param dto DTO object.
      */
     @Override
-    public void update(OrderDto dto) {
+    protected void updateImpl(OrderDto dto) {
         OrderEntity orderEntity = repository.findById(dto.getId())
-            .orElseThrow(() -> new DaoException(getClass(), "update"));
+            .orElseThrow(() -> new DataBaseException("No entity with id: [" + dto.getId() + "] exists"));
         mapper.map(dto, orderEntity);
         repository.save(orderEntity);
     }
 
     /**
-     * Deletes entity from the DB if it exists.
+     * Implementation of the delete method, that must be
+     * implemented in the child class.
      *
-     * @param key UID of the entity.
+     * @param key unique id of the object.
      */
     @Override
-    public void delete(Integer key) {
+    protected void deleteImpl(Integer key) {
         Optional<OrderEntity> orderEntity = repository.findById(key);
         orderEntity.ifPresent(entity -> {
             Set<DriverEntity> driverEntitySet = entity.getAssignedDrivers()

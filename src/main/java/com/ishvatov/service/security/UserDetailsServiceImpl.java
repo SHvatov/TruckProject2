@@ -1,7 +1,7 @@
-package com.ishvatov.security;
+package com.ishvatov.service.security;
 
-import com.ishvatov.model.repository.UserRepository;
 import com.ishvatov.model.entity.UserEntity;
+import com.ishvatov.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,11 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
-     * DAO used in this service
-     * to access the DB.
+     * DAO used in this service to access the DB.
+     */
+    private UserRepository userRepository;
+
+    /**
+     * Default class constructor used for the field injection.
+     *
+     * @param userRepository {@link UserRepository} instance.
      */
     @Autowired
-    private UserRepository userRepository;
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     /**
      * Load user into the system using his UID.

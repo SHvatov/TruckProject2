@@ -1,6 +1,6 @@
 package com.ishvatov.model.mapper;
 
-import com.ishvatov.exception.DaoException;
+import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.CargoDto;
 import com.ishvatov.model.entity.AbstractEntity;
 import com.ishvatov.model.entity.CargoEntity;
@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
  * @author Sergey Khvatov
  */
 @Component
-public class CargoMapper extends AbstractMapper<Integer, CargoEntity, CargoDto>
-    implements Mapper<Integer, CargoEntity, CargoDto> {
+public class CargoMapper extends AbstractMapper<CargoEntity, CargoDto>
+    implements Mapper<CargoEntity, CargoDto> {
 
     /**
      * Repository object, used to access Waypoint DAO.
@@ -115,7 +115,7 @@ public class CargoMapper extends AbstractMapper<Integer, CargoEntity, CargoDto>
         clearAssignedWaypoints(entity);
         waypoints.forEach(id -> {
             WaypointEntity waypointEntity = waypointRepository.findById(id)
-                .orElseThrow(() -> new DaoException(getClass(), "setAssignedWaypoints"));
+                .orElseThrow(() -> new DataBaseException("No entity with id: [" + id + "] exists"));
             Optional.ofNullable(waypointEntity.getCargo())
                 .ifPresent(cargoEntity -> cargoEntity.removeWaypoint(waypointEntity));
             entity.addWaypoint(waypointEntity);

@@ -1,7 +1,6 @@
 package com.ishvatov.service.inner.cargo;
 
-import com.ishvatov.exception.DaoException;
-import com.ishvatov.exception.ValidationException;
+import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.CargoDto;
 import com.ishvatov.model.entity.CargoEntity;
 import com.ishvatov.model.entity.WaypointEntity;
@@ -31,58 +30,50 @@ public class CargoInnerServiceImpl
     /**
      * Default class constructor.
      *
-     * @param repository  repository instance.
-     * @param mapper mapper instance.
+     * @param repository repository instance.
+     * @param mapper     mapper instance.
      */
     @Autowired
     public CargoInnerServiceImpl(CargoRepository repository,
-                                 Mapper<Integer, CargoEntity, CargoDto> mapper) {
+                                 Mapper<CargoEntity, CargoDto> mapper) {
         super(repository, mapper);
     }
 
     /**
-     * Adds entity to the DB. Check if entity already exists.
+     * Implementation of the save method, that must be
+     * implemented in the child class.
      *
-     * @param dto new entity to add.
-     * @throws DaoException        if entity with this UID already exists
-     * @throws ValidationException if DTO field, which is corresponding to
-     *                             the not nullable field in the Entity object is null.
+     * @param dto DTO object.
      */
     @Override
-    public void save(CargoDto dto) {
+    protected void saveImpl(CargoDto dto) {
         CargoEntity entity = new CargoEntity();
         mapper.map(dto, entity);
         repository.save(entity);
     }
 
     /**
-     * Updates data in the database. If fields in teh DTO
-     * are not null, then update them. If are null, then
-     * if corresponding filed in the Entity is nullable,
-     * then set it to null and remove all connections,
-     * otherwise throw NPE.
+     * Implementation of the update method, that must be
+     * implemented in the child class.
      *
-     * @param dto values to update in the entity.
-     * @throws DaoException        if entity with this UID already exists
-     * @throws ValidationException if DTO field, which is corresponding to
-     *                             the not nullable field in the Entity object is null.
+     * @param dto DTO object.
      */
     @Override
-    public void update(CargoDto dto) {
+    protected void updateImpl(CargoDto dto) {
         CargoEntity cargoEntity = repository.findById(dto.getId())
-            .orElseThrow(() -> new DaoException(getClass(), "update"));
+            .orElseThrow(() -> new DataBaseException("No entity with id: [" + dto.getId() + "] exists"));
         mapper.map(dto, cargoEntity);
         repository.save(cargoEntity);
     }
 
     /**
-     * Deletes entity from the DB if it exists.
+     * Implementation of the delete method, that must be
+     * implemented in the child class.
      *
-     * @param key UID of the entity.
-     * @throws ValidationException if key is null.
+     * @param key unique id of the object.
      */
     @Override
-    public void delete(Integer key) {
+    protected void deleteImpl(Integer key) {
         Optional<CargoEntity> cargoEntity = repository.findById(key);
         cargoEntity.ifPresent(entity -> {
             Set<WaypointEntity> set = entity.getAssignedWaypoints()

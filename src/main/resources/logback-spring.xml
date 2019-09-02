@@ -2,7 +2,6 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <property name="LOGS" value="logs" />
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -13,7 +12,7 @@
     </appender>
 
     <appender name="LogFile" class="ch.qos.logback.core.FileAppender">
-        <file>${LOGS}/file.log</file>
+        <file>logs/app.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
                 %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
@@ -28,7 +27,7 @@
     </root>
 
     <!-- LOG "com.ishvatov*" at DEBUG level -->
-    <logger name="com.ishvatov" level="debug" additivity="false">
+    <logger name="com.ishvatov" level="all" additivity="false">
         <appender-ref ref="Console" />
         <appender-ref ref="LogFile" />
     </logger>

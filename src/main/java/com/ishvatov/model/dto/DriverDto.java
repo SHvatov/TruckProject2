@@ -3,7 +3,6 @@ package com.ishvatov.model.dto;
 import com.ishvatov.model.enums.DriverStatusType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
@@ -16,8 +15,12 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class DriverDto extends AbstractDto<String> {
+public class DriverDto implements AbstractDto {
+
+    /**
+     * Unique identificator of the object.
+     */
+    protected String id;
 
     /**
      * Password of the driver. Used only

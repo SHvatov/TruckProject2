@@ -1,0 +1,11 @@
+# user error messages
+user:
+  username:
+    not_exists: No user with such UID found in the system
+    exists: User with such UID already has been registered
+    incorrect: User's UID length must ne from 6 to 20 symbols
+  password:
+    size: User's password length must ne from 6 to 20 symbols
+    incorrect: Incorrect password
+  role:
+    incorrect: User must have a role

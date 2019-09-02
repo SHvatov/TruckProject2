@@ -1,60 +1,45 @@
 package com.ishvatov.controller;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import com.ishvatov.model.dto.UserDto;
+import com.ishvatov.service.inner.user.UserInnerService;
+import com.ishvatov.validation.user.ExistingUserChecksOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * This controller is designed to process login requests.
  *
  * @author Sergey Khvatov
  */
-@Controller
+@RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class LoginController {
 
     /**
-     * Redirects user to the login page.
-     *
-     * @return String representation of the source.
+     * User data repository.
      */
-    @RequestMapping("/login/login")
-    public ModelAndView loginPage() {
-        return new ModelAndView("login/login_page");
-    }
+    private UserInnerService userInnerService;
 
     /**
-     * Redirects user to the error page, if login failed.
+     * Default class field injection constructor.
      *
-     * @return String representation of the source.
+     * @param userInnerService user service object.
      */
-    @RequestMapping("/login/login_failed")
-    public ModelAndView loginFailure() {
-        return new ModelAndView("login/login_failed");
+    @Autowired
+    public LoginController(UserInnerService userInnerService) {
+        this.userInnerService = userInnerService;
     }
 
-    /**
-     * Redirects employee to the homepage.
-     *
-     * @return {@link ModelAndView} instance.
-     */
-    @RequestMapping("/employee/homepage")
-    public ModelAndView showEmployeeHomePage() {
-        return new ModelAndView("employee/homepage");
-    }
-
-    /**
-     * Redirects employee to the homepage.
-     *
-     * @return {@link ModelAndView} instance.
-     */
-    @RequestMapping("/driver/homepage")
-    public ModelAndView showDriverHomePage() {
-        ModelAndView modelAndView = new ModelAndView("driver/homepage");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-        modelAndView.addObject("driverUID", currentPrincipalName);
-        return modelAndView;
+    @PostMapping(path = "/login/authenticate", produces = "application/json")
+    public ResponseEntity<UserDto> authenticateUser(
+        @RequestBody @Validated(ExistingUserChecksOrder.class) UserDto user) {
+        UserDto response = userInnerService.find(user.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -1,7 +1,6 @@
 package com.ishvatov.service.inner.truck;
 
-import com.ishvatov.exception.DaoException;
-import com.ishvatov.exception.ValidationException;
+import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.TruckDto;
 import com.ishvatov.model.entity.DriverEntity;
 import com.ishvatov.model.entity.TruckEntity;
@@ -35,22 +34,21 @@ public class TruckInnerServiceImpl
      * @param mapper     mapper instance.
      */
     @Autowired
-    public TruckInnerServiceImpl(TruckRepository repository, Mapper<String, TruckEntity, TruckDto> mapper) {
+    public TruckInnerServiceImpl(TruckRepository repository,
+                                 Mapper<TruckEntity, TruckDto> mapper) {
         super(repository, mapper);
     }
 
     /**
-     * Adds entity to the DB. Check if entity already exists.
+     * Implementation of the save method, that must be
+     * implemented in the child class.
      *
-     * @param dto new entity to add.
-     * @throws DaoException        if entity with this UID already exists
-     * @throws ValidationException if DTO field, which is corresponding to
-     *                             the not nullable field in the Entity object is null.
+     * @param dto DTO object.
      */
     @Override
-    public void save(TruckDto dto) {
+    protected void saveImpl(TruckDto dto) {
         if (exists(dto.getId())) {
-            throw new DaoException(getClass(), "save", "Entity with such UID already exists");
+            throw new DataBaseException("Entity with such UID already exists");
         } else {
             TruckEntity entity = new TruckEntity();
             mapper.map(dto, entity);
@@ -59,33 +57,27 @@ public class TruckInnerServiceImpl
     }
 
     /**
-     * Updates data in the database. If fields in teh DTO
-     * are not null, then update them. If are null, then
-     * if corresponding filed in the Entity is nullable,
-     * then set it to null and remove all connections,
-     * otherwise throw NPE.
+     * Implementation of the update method, that must be
+     * implemented in the child class.
      *
-     * @param dto values to update in the entity.
-     * @throws DaoException        if entity with this UID already exists
-     * @throws ValidationException if DTO field, which is corresponding to
-     *                             the not nullable field in the Entity object is null.
+     * @param dto DTO object.
      */
     @Override
-    public void update(TruckDto dto) {
+    protected void updateImpl(TruckDto dto) {
         TruckEntity entity = repository.findById(dto.getId())
-            .orElseThrow(() -> new DaoException(getClass(), "update"));
+            .orElseThrow(() -> new DataBaseException("No entity with id: [" + dto.getId() + "] exists"));
         mapper.map(dto, entity);
         repository.save(entity);
     }
 
     /**
-     * Deletes entity from the DB if it exists.
+     * Implementation of the delete method, that must be
+     * implemented in the child class.
      *
-     * @param key UID of the entity.
-     * @throws ValidationException if key is null.
+     * @param key unique id of the object.
      */
     @Override
-    public void delete(String key) {
+    protected void deleteImpl(String key) {
         Optional<TruckEntity> truckEntity = repository.findById(key);
         truckEntity.ifPresent(entity -> {
             Optional.ofNullable(entity.getOrder()).ifPresent(e -> {
