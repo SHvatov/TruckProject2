@@ -1,60 +1,71 @@
 import {combineReducers} from 'redux'
-import {credentials} from './Credentials';
 import Constants from "../utils/Constants";
+import {credentials} from './Credentials';
+import {error} from './Error'
+import {buffer} from "./Buffer";
+import {status} from "./Status";
+import {fetched} from "./Fetched";
+import {data} from "./Data";
 
 /**
  * Initial state of the application.
  */
 export const INITIAL_STATE = {
 
-	// user credentials
+	/** user credentials */
 	credentials: {
-		// fetching status
-		isFetching: false,
-
-		// user's credentials
 		id: '',
 		password: '',
 		authority: Constants.NOT_AUTHORIZED,
-
-		// user credentials input error
-		error: {
-			id: '',
-			password: '',
-			other: ''
-		}
 	},
 
-	/** Describes current status of the opened tab */
-	currentTab: {
-		// opened category
-		category: Constants.MANAGER_TRUCKS_CATEGORY,
-		// fetching status
-		isFetching: false
-	},
+	/** Describes current status of all objects.
+	 * Does not need to be updated
+	 * on componentDidMount
+	 */
+	status: {},
+
+	/** Specific buffer, which is used to store buffer information,
+	 * that has been fetched from the server, such as
+	 * select values and etc.
+	 */
+	fetched: {},
+
+	/** Describes current error.
+	 * Does not need to be updated
+	 * on componentDidMount */
+	error: {},
+
+	/** Buffer of the application - all inputs are here.
+	 * Requires initial update on componentDidMount
+	 * in order to store empty, but necessary fields.*/
+	buffer: {},
 
 	// data, which is currently stored in the
-	// application state
-	data: [
+	// application state, accessed by id
+	data: {
 		/**
 		 * {
 		 *     entity: Object, - dto object itself
-		 *     error: Object, - corresponding to this object errors
-		 *     					for each editable element + other for internal errors
 		 *     status: {
 		 *        isEditing: boolean,
 		 *        isDeleting: boolean,
-		 *        isShowingDetailedInformation: boolean
-		 *        isFetching
+		 *        isFetching: boolean,
+		 *        isShowingMap: boolean
 		 *     } - status of the element
 		 * }
 		 */
-	]
+	}
 };
 
 /**
  * Application state reducers.
  */
 export const ROOT_REDUCER = combineReducers({
-	credentials
+	buffer,
+	credentials,
+	data,
+	error,
+	fetched,
+	status
 });

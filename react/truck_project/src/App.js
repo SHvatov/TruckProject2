@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import LoginForm from "./components/containers/LoginForm";
+import LoginForm from "./components/LoginForm";
 import {connect} from "react-redux";
 import * as PropTypes from "prop-types";
 import Constants from "./utils/Constants";
+import TruckTable from "./components/containers/truck/TruckTable";
 
 /**
  * Main entry point of the application.
@@ -32,6 +33,7 @@ class AppComponent extends Component {
 			case Constants.MANAGER:
 				return (
 					<div>
+						<TruckTable/>
 					</div>
 				);
 			case Constants.DRIVER:

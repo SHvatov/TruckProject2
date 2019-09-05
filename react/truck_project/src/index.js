@@ -5,18 +5,23 @@ import {Provider} from 'react-redux';
 import {INITIAL_STATE, ROOT_REDUCER} from './state/Reducers';
 import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
-import Selector from "./components/basic/Selector";
+import {YMaps} from "react-yandex-maps";
+import Constants from "./utils/Constants";
 
-const store = createStore(ROOT_REDUCER, INITIAL_STATE, applyMiddleware(thunk));
+// redux store
+const store = createStore(
+	ROOT_REDUCER,
+	INITIAL_STATE,
+	applyMiddleware(thunk)
+);
 
+// app main
 ReactDOM.render((
-		/*<Provider store={store}>
-			<App/>
+		<Provider store={store}>
+			<YMaps query={{apikey: Constants.YANDEX_MAPS_API_KEY}}>
+				<App/>
+			</YMaps>
 		</Provider>
-	),*/
-		<div className='row centered-element'>
-			<Selector label='Test' error='' options={[{label: 'test1', value: 'test1'}]}/>
-		</div>
 	),
-		document.getElementById('root')
+	document.getElementById('root')
 );
