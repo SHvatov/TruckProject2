@@ -13,6 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Arrays;
 
 /**
  * Security configuration class.
@@ -81,9 +84,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic()
             .and()
+            .cors().and()
             .authorizeRequests()
             .antMatchers("/login/authenticate").permitAll()
-            .antMatchers("/employee/**").hasRole("USER")
+            .antMatchers("/manager/**").hasRole("USER")
             .antMatchers("/driver/**").hasRole("DRIVER")
             .anyRequest().authenticated()
             .and()

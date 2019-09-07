@@ -25,18 +25,18 @@ public class UserDto implements AbstractDto {
     /**
      * Unique identificator of the object.
      */
-    @NotBlank
+    @NotBlank(message = "{common.not_blank}")
     @Size(
         min = 5, max = 20,
         message = "{user.username.incorrect}",
         groups = NotExistingUserChecks.class
     )
-    protected String id;
+    private String id;
 
     /**
      * UserEntity login userPassword.
      */
-    @NotBlank
+    @NotBlank(message = "{common.not_blank}")
     @Size(
         min = 5, max = 20,
         message = "{user.password.incorrect}",

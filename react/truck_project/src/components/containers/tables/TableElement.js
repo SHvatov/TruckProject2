@@ -20,11 +20,11 @@ class TableElement extends Component {
 	render() {
 		let {entity, postfix} = this.props;
 		return (
-			<Row className='table-row centered-element'>
+			<Row className='table-row'>
 				{convertObjectToColumns(entity, postfix)}
 				{
 					!this.props.children ? '' : React.Children.map(this.props.children, (child) => (
-						<Col className='table-button' xs={1}>
+						<Col className='table-button'>
 							{child}
 						</Col>
 					))

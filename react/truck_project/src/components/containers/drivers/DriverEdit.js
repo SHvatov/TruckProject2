@@ -1,44 +1,36 @@
 import React, {Component} from 'react';
 import Input from "../input/Input";
-import Select from "../input/Select";
 import {Map, Placemark, SearchControl, ZoomControl} from "react-yandex-maps";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {updateBuffer} from "../../../state/Buffer";
+import {Row} from "react-bootstrap";
 
-class TruckEditComponent extends Component {
+class DriverEditComponent extends Component {
 
 	static propTypes = {
 		// application buffer
 		buffer: PropTypes.object,
-		// function, called to update coordinates in teh buffer
+		// function, called to update coordinates in the buffer
 		handleCoordinatesUpdate: PropTypes.func
 	};
 
 	render() {
 		let {buffer, handleCoordinatesUpdate} = this.props;
 		return (
-			<div>
-				<Input name='capacity' label='Capacity'/>
-				<Input name='shiftSize' label='Shift Size'/>
-				<Select label='Status' name='status'
-						options={[
-							{label: 'In order', value: 'IN_ORDER'},
-							{label: 'Not in order', value: 'NOT_IN_ORDER'}]
-						}/>
-				<div className='table-row'>
-					<Map defaultState={{
+			<div className='table-row'>
+				<Input name='password' label='Password'/>
+				<Input name='name' label='Name'/>
+				<Input name='surname' label='Last name'/>
+				<Row>
+					<Map className='map' defaultState={{
 						center: [buffer['longitude'], buffer['latitude']],
 						zoom: 7,
 						controls: []
-					}} modules={[
-						'geoObject.addon.balloon',
-						'geoObject.addon.hint'
-					]} className='map'>
-						<Placemark properties={{hintContent: 'New position'}}
-								   geometry={[
-									   buffer['longitude'], buffer['latitude']
-								   ]}/>
+					}}>
+						<Placemark geometry={[
+							buffer['longitude'], buffer['latitude']
+						]}/>
 						<SearchControl options={{float: 'right'}}
 									   instanceRef={control => this.searchControl = control}
 									   onResultShow={() => {
@@ -52,7 +44,7 @@ class TruckEditComponent extends Component {
 									   }}/>
 						<ZoomControl options={{float: 'right'}}/>
 					</Map>
-				</div>
+				</Row>
 			</div>
 		);
 	}
@@ -78,6 +70,6 @@ const mapDispatchToProps = dispatch => {
 	}
 };
 
-const TruckEdit = connect(mapStateToProps, mapDispatchToProps)(TruckEditComponent);
+const DriverEdit = connect(mapStateToProps, mapDispatchToProps)(DriverEditComponent);
 
-export default TruckEdit;
+export default DriverEdit;

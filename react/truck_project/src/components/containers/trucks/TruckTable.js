@@ -6,6 +6,7 @@ import {addEntity, deleteEntity, fetchEntityList, updateEntity} from "../../../s
 import Constants from "../../../utils/Constants";
 import TruckAdd from "./TruckAdd";
 import TruckEdit from "./TruckEdit";
+import {Col, Row} from "react-bootstrap";
 
 class TruckTableComponent extends Component {
 
@@ -13,13 +14,13 @@ class TruckTableComponent extends Component {
 		// user's auth credentials
 		credentials: PropTypes.object,
 
-		//  function, which is called to add truck entities
+		//  function, which is called to add trucks entities
 		addTruckEntity: PropTypes.func,
-		//  function, which is called to update truck entities
+		//  function, which is called to update trucks entities
 		updateTruckEntity: PropTypes.func,
-		//  function, which is called to delete truck entities
+		//  function, which is called to delete trucks entities
 		deleteTruckEntity: PropTypes.func,
-		//  function, which is called to fetch truck entities
+		//  function, which is called to fetch trucks entities
 		fetchTruckEntities: PropTypes.func,
 	};
 
@@ -33,12 +34,13 @@ class TruckTableComponent extends Component {
 				   addEntity={(entity) => addTruckEntity(entity, credentials)}
 				   updateEntity={(entity) => updateTruckEntity(entity, credentials)}
 				   deleteEntity={(id) => deleteTruckEntity(id, credentials)}
-				   addModalBody={<TruckAdd/>}
-				   editModalBody={<TruckEdit/>}
+				   addModalBody={<TruckAdd/>} editModalBody={<TruckEdit/>}
+				   initialEntity={Constants.TRUCK_ENTITY_INIT_VALUE}
 				   postfix={{
 					   capacity: 'kg.', shiftSize: 'hours',
 					   latitude: 'lat.', longitude: 'long.'
-				   }}/>
+				   }}>
+			</Table>
 		);
 	}
 }

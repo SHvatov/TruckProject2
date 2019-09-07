@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {isEmpty} from "../../../utils/Utils";
-import {Alert, Col, Form, FormGroup, Row} from "react-bootstrap";
+import {isEmptyObject} from "../../../utils/Utils";
+import {Alert, Col, Row} from "react-bootstrap";
 import SubmitButton from "../input/SubmitButton";
 import TableElement from "./TableElement";
 import AddModal from "../modals/AddModal";
@@ -31,6 +31,8 @@ class TableComponent extends Component {
 		addModalBody: PropTypes.object,
 		// describes the body of the edit modal
 		editModalBody: PropTypes.object,
+		// initial value, used to init buffer before adding value
+		initialEntity: PropTypes.object,
 
 		// application data
 		data: PropTypes.object,
@@ -40,17 +42,13 @@ class TableComponent extends Component {
 		error: PropTypes.object
 	};
 
-	componentDidMount() {
-		// fetch values from the server
-		this.props.refreshTable();
-	}
-
 	render() {
 		let {
 			status, error, refreshTable, addEntity,
 			updateEntity, deleteEntity, data, postfix,
-			addModalBody, editModalBody
+			addModalBody, editModalBody, initialEntity
 		} = this.props;
+		console.log(error);
 		return (
 			<div className='table'>
 				<Row className='table-row'>
@@ -59,7 +57,8 @@ class TableComponent extends Component {
 									  isFetching={status['table'] ? status['table']['fetch'] : false}/>
 					</Col>
 					<Col xs={1} className='table-button'>
-						<AddModal id='addModal' status={status['addModal']} addEntity={addEntity}>
+						<AddModal id='addModal' status={status['addModal']}
+								  addEntity={addEntity} initialEntity={initialEntity}>
 							{addModalBody}
 						</AddModal>
 					</Col>
@@ -70,7 +69,7 @@ class TableComponent extends Component {
 					</Alert>
 				</Row>
 				{
-					isEmpty(data)
+					isEmptyObject(data)
 						? (
 							<Row className='table-row'>
 								<Col className='centered-element'>
@@ -79,7 +78,7 @@ class TableComponent extends Component {
 							</Row>
 						)
 						: Object.keys(data).map((key) => (
-							<TableElement entity={data[key]} postfix={postfix}>
+							<TableElement entity={data[key]} postfix={postfix} key={key}>
 								<EditModal status={status[key]} entity={data[key]} updateEntity={updateEntity}>
 									{editModalBody}
 								</EditModal>

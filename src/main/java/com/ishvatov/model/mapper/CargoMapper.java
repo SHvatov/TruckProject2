@@ -2,7 +2,7 @@ package com.ishvatov.model.mapper;
 
 import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.CargoDto;
-import com.ishvatov.model.entity.AbstractEntity;
+import com.ishvatov.model.entity.AbstractEntityWithIntegerId;
 import com.ishvatov.model.entity.CargoEntity;
 import com.ishvatov.model.entity.WaypointEntity;
 import com.ishvatov.model.repository.WaypointRepository;
@@ -72,7 +72,7 @@ public class CargoMapper extends AbstractMapper<CargoEntity, CargoDto>
         destination.setAssignedWaypoints(source.getAssignedWaypoints()
             .stream()
             .filter(Objects::nonNull)
-            .map(AbstractEntity::getId)
+            .map(AbstractEntityWithIntegerId::getId)
             .collect(Collectors.toSet()));
     }
 

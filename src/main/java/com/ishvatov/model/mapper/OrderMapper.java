@@ -72,6 +72,7 @@ public class OrderMapper extends AbstractMapper<OrderEntity, OrderDto>
         }).setPostConverter(converToDto());
 
         this.mapper.createTypeMap(this.dtoClass, this.entityClass).addMappings(m -> {
+            m.skip(OrderEntity::setId);
             m.skip(OrderEntity::setAssignedTruck);
             m.skip(OrderEntity::setAssignedDrivers);
             m.skip(OrderEntity::setAssignedWaypoints);
@@ -94,13 +95,13 @@ public class OrderMapper extends AbstractMapper<OrderEntity, OrderDto>
         destination.setAssignedDrivers(source.getAssignedDrivers()
             .stream()
             .filter(Objects::nonNull)
-            .map(AbstractEntity::getId)
+            .map(AbstractEntityWithStringId::getId)
             .collect(Collectors.toSet()));
 
         destination.setAssignedWaypoints(source.getAssignedWaypoints()
             .stream()
             .filter(Objects::nonNull)
-            .map(AbstractEntity::getId)
+            .map(AbstractEntityWithIntegerId::getId)
             .collect(Collectors.toList()));
     }
 
@@ -171,7 +172,7 @@ public class OrderMapper extends AbstractMapper<OrderEntity, OrderDto>
      * Updates the trucks set of the entity.
      *
      * @param truckId UID of the truck.
-     * @param entity   Entity object.
+     * @param entity  Entity object.
      */
     private void setTruck(String truckId, OrderEntity entity) {
         Optional.ofNullable(entity.getAssignedTruck()).ifPresent(e -> {

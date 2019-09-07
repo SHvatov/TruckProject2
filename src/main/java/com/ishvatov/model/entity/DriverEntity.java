@@ -21,7 +21,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DriverEntity extends AbstractEntity<String> {
+public class DriverEntity extends AbstractEntityWithStringId {
 
     /**
      * String representation of the 'name'

@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import Input from "../input/Input";
-import Select from "../input/Select";
 import {Map, Placemark, SearchControl, ZoomControl} from "react-yandex-maps";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {updateBuffer} from "../../../state/Buffer";
+import {Row} from "react-bootstrap";
 
-class TruckAddComponent extends Component {
+class CargoAddComponent extends Component {
 
 	static propTypes = {
 		// application buffer
@@ -19,28 +19,17 @@ class TruckAddComponent extends Component {
 		let {buffer, handleCoordinatesUpdate} = this.props;
 		return (
 			<div className='table-row'>
-				<Input name='id' label='Reg. Number'/>
-				<Input name='capacity' label='Capacity'/>
-				<Input name='shiftSize' label='Shift Size'/>
-				<Select label='Status' name='status'
-						options={[
-							{label: 'In order', value: 'IN_ORDER'},
-							{label: 'Not in order', value: 'NOT_IN_ORDER'}]
-						}/>
-				<div>
-					<Map defaultState={{
-						center: [55, 37],
+				<Input name='name' label='Description'/>
+				<Input name='mass' label='Mass' postLabel='kg.'/>
+				<Row>
+					<Map className='map' defaultState={{
+						center: [buffer['longitude'], buffer['latitude']],
 						zoom: 7,
 						controls: []
-					}} modules={[
-						'geoObject.addon.balloon',
-						'geoObject.addon.hint'
-					]} className='map'>
-						<Placemark properties={{hintContent: 'New position'}}
-								   geometry={[
-									   buffer['longitude'] ? buffer['longitude'] : 55,
-									   buffer['latitude'] ? buffer['latitude'] : 37
-								   ]}/>
+					}}>
+						<Placemark geometry={[
+							buffer['longitude'], buffer['latitude']
+						]}/>
 						<SearchControl options={{float: 'right'}}
 									   instanceRef={control => this.searchControl = control}
 									   onResultShow={() => {
@@ -54,7 +43,7 @@ class TruckAddComponent extends Component {
 									   }}/>
 						<ZoomControl options={{float: 'right'}}/>
 					</Map>
-				</div>
+				</Row>
 			</div>
 		);
 	}
@@ -80,6 +69,6 @@ const mapDispatchToProps = dispatch => {
 	}
 };
 
-const TruckAdd = connect(mapStateToProps, mapDispatchToProps)(TruckAddComponent);
+const CargoAdd = connect(mapStateToProps, mapDispatchToProps)(CargoAddComponent);
 
-export default TruckAdd;
+export default CargoAdd;

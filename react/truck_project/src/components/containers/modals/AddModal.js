@@ -5,7 +5,7 @@ import SubmitButton from "../input/SubmitButton";
 import {updateStatusById} from "../../../state/Status";
 import {connect} from "react-redux";
 import {multipleActions} from "../../../state/Requests";
-import {clearBuffer} from "../../../state/Buffer";
+import {clearBuffer, updateBuffer} from "../../../state/Buffer";
 import {clearError} from "../../../state/Error";
 
 /**
@@ -25,6 +25,8 @@ class AddModalComponent extends Component {
 		status: PropTypes.object,
 		// function, which is called to update entity
 		addEntity: PropTypes.func,
+		// initial value, which is used to update the buffer
+		initialEntity: PropTypes.object,
 
 		// error object
 		error: PropTypes.object,
@@ -41,11 +43,12 @@ class AddModalComponent extends Component {
 	render() {
 		let {
 			id, status, addEntity, buffer,
-			showAddModal, hideAddModal, error
+			showAddModal, hideAddModal, error,
+			initialEntity
 		} = this.props;
 		return (
 			<div>
-				<Button variant='danger' onClick={() => showAddModal(id)}>
+				<Button variant='info' onClick={() => showAddModal(id, initialEntity)}>
 					Add
 				</Button>
 				<Modal show={status ? status['add'] : false} size='lg'
@@ -99,9 +102,9 @@ const mapStateToProps = state => {
  */
 const mapDispatchToProps = dispatch => {
 	return {
-		showAddModal: (id) => dispatch(multipleActions([
+		showAddModal: (id, initialValue) => dispatch(multipleActions([
 			updateStatusById(id, {add: true}),
-			clearBuffer(),
+			updateBuffer(initialValue),
 			clearError()
 		])),
 		hideAddModal: (id) => dispatch(multipleActions([

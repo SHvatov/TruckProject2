@@ -2,10 +2,7 @@ package com.ishvatov.model.mapper;
 
 import com.ishvatov.exception.DataBaseException;
 import com.ishvatov.model.dto.TruckDto;
-import com.ishvatov.model.entity.AbstractEntity;
-import com.ishvatov.model.entity.DriverEntity;
-import com.ishvatov.model.entity.OrderEntity;
-import com.ishvatov.model.entity.TruckEntity;
+import com.ishvatov.model.entity.*;
 import com.ishvatov.model.repository.DriverRepository;
 import com.ishvatov.model.repository.OrderRepository;
 import org.modelmapper.ModelMapper;
@@ -87,7 +84,7 @@ public class TruckMapper extends AbstractMapper<TruckEntity, TruckDto>
         destination.setAssignedDrivers(source.getAssignedDrivers()
             .stream()
             .filter(Objects::nonNull)
-            .map(AbstractEntity::getId)
+            .map(AbstractEntityWithStringId::getId)
             .collect(Collectors.toSet()));
     }
 

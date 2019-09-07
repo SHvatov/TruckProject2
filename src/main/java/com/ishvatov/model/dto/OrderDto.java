@@ -24,7 +24,7 @@ public class OrderDto implements AbstractDto {
     /**
      * Unique identificator of the object.
      */
-    protected Integer id;
+    private Integer id;
 
     /**
      * Status of the order.

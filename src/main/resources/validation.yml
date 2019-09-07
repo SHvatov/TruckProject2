@@ -1,11 +1,45 @@
+# common errors
+common:
+  not_blank: This field cannot be empty
+  order_assigned: Cannot modify entity while it has an assigned order
+
 # user error messages
 user:
   username:
     not_exists: No user with such UID found in the system
     exists: User with such UID already has been registered
-    incorrect: User's UID length must ne from 6 to 20 symbols
+    incorrect: User's UID length must be from 6 to 20 symbols
   password:
-    size: User's password length must ne from 6 to 20 symbols
+    size: User's password length must be from 6 to 20 symbols
     incorrect: Incorrect password
   role:
     incorrect: User must have a role
+
+# truck error messages
+truck:
+  id:
+    not_exists: No truck with such UID found in the system
+    exists: Truck with such UID already has been registered
+    incorrect: Truck's UID must contain 7 symbols and math the following pattern - [xx00000]
+  capacity:
+    incorrect: Capacity value must be from 500 to 10000 kg.
+  shift_size:
+    incorrect: Shift size value must be from 6 to 12 hours.
+
+# driver error messages
+driver:
+  id:
+    not_exists: No driver with such UID found in the system
+    exists: Driver with such UID already has been registered
+    incorrect: Driver's UID must contain from 5 to 20 symbols
+  password:
+    incorrect: Driver's password must contain from 5 to 20 symbols
+
+# cargo error messages
+cargo:
+  id:
+    not_exists: The following cargo does not exist
+  name:
+    incorrect: Name of the cargo must contain from 5 to 255 symbols
+  mass:
+    incorrect: Mass of the cargo must be from 0.5 to 1000 kg.

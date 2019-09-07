@@ -2,6 +2,15 @@ import {Col} from "react-bootstrap";
 import React from "react";
 
 /**
+ * Checks if passed object is undefined or null.
+ * @param obj - object to check.
+ * @returns {boolean} true, if obj is object, false otherwise.
+ */
+export const isUndefined = (obj) => (
+	typeof obj === 'undefined'
+);
+
+/**
  * Checks if passed object is object or null.
  * @param obj - object to check.
  * @returns {boolean} true, if obj is object, false otherwise.
@@ -10,13 +19,17 @@ export const isObject = (obj) => (
 	typeof obj === 'object'
 );
 
+export const isEmptyObject = (obj) => (
+	obj ? Object.keys(obj).length === 0 : false
+);
+
 /**
  * Checks if passed object is object or null.
  * @param obj - object to check.
  * @returns {boolean} true, if obj is object, false otherwise.
  */
 export const isEmpty = (obj) => (
-	obj ? Object.keys(obj).length === 0 : false
+	obj ? Array.isArray(obj) && obj.length === 0 : false
 );
 
 /**
@@ -65,7 +78,7 @@ export const convertArrayToList = (arr) => (
  */
 export const convertObjectToColumns = (obj = {}, postfix = {}) => (
 	Object.keys(obj).map(key => {
-		if (isNull(obj[key])) {
+		if (isNull(obj[key]) || isEmpty(obj[key])) {
 			return (
 				<Col className='table-col' key={key}>
 					<div className='centered-text'>
@@ -82,13 +95,48 @@ export const convertObjectToColumns = (obj = {}, postfix = {}) => (
 		} else if (isObject(obj[key])) {
 			return convertObjectToColumns(obj[key]);
 		} else {
-			return (
-				<Col className='table-col' key={key}>
-					<div className='centered-text'>
-						{obj[key] + ' ' + (key in postfix ? postfix[key] : '')}
-					</div>
-				</Col>
-			);
+			let norm = obj[key].toString().replace(new RegExp('_', 'g'), ' ');
+			if (norm.length > 20) {
+				return (<div></div>);
+			} else {
+				return (
+					<Col className='table-col' key={key}>
+						<div className='centered-text'>
+							{norm + ' ' + (key in postfix ? postfix[key] : '')}
+						</div>
+					</Col>
+				);
+			}
 		}
 	})
 );
+
+/**
+ * Generates random integer from min to max.
+ * @param min - minimum value.
+ * @param max - maximum value.
+ * @returns {number} random number from min to max.
+ */
+export const randomInteger = (min, max) => {
+	let rand = min + Math.random() * (max + 1 - min);
+	return Math.floor(rand);
+};
+
+/**
+ * Generates random id for the entity.
+ * @param charsNum - number of chars in the id.
+ * @param digitsNum - number of digits in the id.
+ * @returns {string} random id for the entity.
+ */
+export const generateRandomId = (charsNum, digitsNum) => {
+	let result = '';
+	let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+	let charactersLength = characters.length;
+	for (let i = 0; i < charsNum; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	for (let i = 0; i < digitsNum; i++) {
+		result += randomInteger(0, 9).toString();
+	}
+	return result;
+}

@@ -15,6 +15,9 @@ class InputComponent extends Component {
 		name: PropTypes.string,
 		/** Label of the input */
 		label: PropTypes.string,
+		// label, which is displayed in
+		// the end of the input line
+		postLabel: PropTypes.string,
 		/** Type of the input */
 		type: PropTypes.string,
 
@@ -29,7 +32,7 @@ class InputComponent extends Component {
 	render() {
 		let {
 			name, label, error, type = 'text',
-			buffer, handleValueUpdate
+			buffer, handleValueUpdate, postLabel = ''
 		} = this.props;
 		return (
 			<Form.Row>
@@ -38,6 +41,13 @@ class InputComponent extends Component {
 						<InputGroup.Prepend>
 							<InputGroup.Text id={name + 'Prepend'}>{label}</InputGroup.Text>
 						</InputGroup.Prepend>
+						{
+							postLabel ? (
+								<InputGroup.Prepend>
+									<InputGroup.Text id={name + 'Prepend'}>{postLabel}</InputGroup.Text>
+								</InputGroup.Prepend>
+							) : ''
+						}
 						<Form.Control type={type} aria-describedby={name + 'Prepend'}
 									  name={name} value={buffer[name] ? buffer[name] : ''}
 									  onChange={(event) => handleValueUpdate(name, event.target.value)}

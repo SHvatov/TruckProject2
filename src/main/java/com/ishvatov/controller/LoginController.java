@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * This controller is designed to process login requests.
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping(value = "/login")
 public class LoginController {
 
     /**
@@ -36,7 +34,7 @@ public class LoginController {
         this.userInnerService = userInnerService;
     }
 
-    @PostMapping(path = "/login/authenticate", produces = "application/json")
+    @PostMapping(path = "/authenticate", produces = "application/json")
     public ResponseEntity<UserDto> authenticateUser(
         @RequestBody @Validated(ExistingUserChecksOrder.class) UserDto user) {
         UserDto response = userInnerService.find(user.getId());

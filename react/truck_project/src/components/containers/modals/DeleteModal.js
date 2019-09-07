@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Alert, Button, Col, Form, FormGroup, Modal, ModalBody, Row} from "react-bootstrap";
+import {Alert, Button, Col, Modal, ModalBody, Row} from "react-bootstrap";
 import SubmitButton from "../input/SubmitButton";
 import {updateStatusById} from "../../../state/Status";
 import {connect} from "react-redux";
@@ -56,14 +56,16 @@ class DeleteModalComponent extends Component {
 						</Row>
 					</ModalBody>
 					<Modal.Footer>
-						<Form.Row className={'justify-content-center'}>
-							<FormGroup as={Col} className={'text-center'}>
+						<Row>
+							<Col className='table-button'>
 								<SubmitButton variant='danger' onClickHandler={() => deleteEntity(entity['id'])}
 											  isFetching={status ? status['fetch'] : false} text='Delete'/>
+							</Col>
+							<Col className='table-button'>
 								<Button variant='danger'
 										onClick={() => hideDeleteModal(entity['id'])}>Cancel</Button>
-							</FormGroup>
-						</Form.Row>
+							</Col>
+						</Row>
 					</Modal.Footer>
 				</Modal>
 			</div>

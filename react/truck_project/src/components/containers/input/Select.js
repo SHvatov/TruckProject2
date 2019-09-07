@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Col, Form, InputGroup} from 'react-bootstrap';
+import {Col, Form, FormGroup, InputGroup} from 'react-bootstrap';
 import {updateBuffer} from "../../../state/Buffer";
 import {connect} from "react-redux";
 
@@ -22,19 +22,25 @@ class SelectComponent extends Component {
 		})),
 
 		/** Update handler */
-		handleValueUpdate: PropTypes.func
+		handleValueUpdate: PropTypes.func,
+		// error object
+		error: PropTypes.object,
 	};
 
 	render() {
-		let {label, name, options, handleValueUpdate} = this.props;
+		let {
+			label, name, error,
+			options, handleValueUpdate
+		} = this.props;
 		return (
 			<Form.Row>
-				<Form.Group as={Col}>
+				<FormGroup as={Col}>
 					<InputGroup>
 						<InputGroup.Prepend>
 							<InputGroup.Text id={name + 'Prepend'}>{label}</InputGroup.Text>
 						</InputGroup.Prepend>
-						<Form.Control as="select" onChange={(event) => handleValueUpdate(name, event.target.value)}>
+						<Form.Control as="select" isInvalid={error[name]}
+									  onChange={(event) => handleValueUpdate(name, event.target.value)}>
 							{
 								options.map((opt, index) => (
 									<option key={index} value={opt.value}>
@@ -43,9 +49,11 @@ class SelectComponent extends Component {
 								))
 							}
 						</Form.Control>
+						<Form.Control.Feedback type="invalid">
+							{error[name]}
+						</Form.Control.Feedback>
 					</InputGroup>
-
-				</Form.Group>
+				</FormGroup>
 			</Form.Row>
 		);
 	}
@@ -57,7 +65,7 @@ class SelectComponent extends Component {
  */
 const mapStateToProps = state => {
 	return {
-		buffer: state.buffer,
+		error: state.error
 	};
 };
 

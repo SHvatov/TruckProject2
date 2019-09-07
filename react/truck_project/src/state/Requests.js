@@ -71,7 +71,7 @@ export const validateCredentialsRequest = (credentials) => {
 
 /**
  * Sends get request to the server in order to fetch
- * the list of truck entities.
+ * the list of trucks entities.
  * @param url - request path.
  * @param credentials - user's auth credentials.
  */
@@ -109,7 +109,7 @@ export const fetchEntityList = (url, credentials) => {
 				} else if (error.response.status === RequestErrorCodes.FORBIDDEN) {
 					err = {tableError: 'Can not access server using your credentials'};
 				} else {
-					err = {tableError: error.response.statusText};
+					err = {tableError: error.response.data};
 				}
 			} else if (error.request) {
 				err = {tableError: 'The request was made but no response was received.'};
@@ -154,7 +154,7 @@ export const addEntity = (url, entity, credentials) => {
 			// clear errors
 			dispatch(clearError());
 			// update the credentials
-			dispatch(addEntitySuccess(entity['id'], entity));
+			dispatch(addEntitySuccess(response.data['id'], response.data));
 		}).catch((error) => {
 			// update error object in case of exception
 			let err;
@@ -165,7 +165,7 @@ export const addEntity = (url, entity, credentials) => {
 				} else if (error.response.status === RequestErrorCodes.FORBIDDEN) {
 					err = {addModalError: 'Can not access server using your credentials'};
 				} else {
-					err = {addModalError: error.response.statusText};
+					err = {addModalError: error.response.data};
 				}
 			} else if (error.request) {
 				err = {addModalError: 'The request was made but no response was received.'};
@@ -210,7 +210,7 @@ export const updateEntity = (url, entity, credentials) => {
 			// clear errors
 			dispatch(clearError());
 			// update the credentials
-			dispatch(updateEntitySuccess(entity['id'], entity));
+			dispatch(updateEntitySuccess(response.data['id'], response.data));
 		}).catch((error) => {
 			// update error object in case of exception
 			let err;
@@ -221,7 +221,7 @@ export const updateEntity = (url, entity, credentials) => {
 				} else if (error.response.status === RequestErrorCodes.FORBIDDEN) {
 					err = {tableError: 'Can not access server using your credentials'};
 				} else {
-					err = {tableError: error.response.statusText};
+					err = {tableError: error.response.data};
 				}
 			} else if (error.request) {
 				err = {tableError: 'The request was made but no response was received.'};
@@ -257,7 +257,7 @@ export const deleteEntity = (url, id, credentials) => {
 				username: credentials.id,
 				password: credentials.password
 			},
-			data: id
+			data: {id}
 		}).then((response) => {
 			// set request status
 			dispatch(clearStatusById(id));
@@ -266,7 +266,7 @@ export const deleteEntity = (url, id, credentials) => {
 			// clear errors
 			dispatch(clearError());
 			// update the credentials
-			dispatch(deleteEntitySuccess(id));
+			dispatch(deleteEntitySuccess(response.data));
 		}).catch((error) => {
 			// update error object in case of exception
 			let err;
@@ -277,7 +277,7 @@ export const deleteEntity = (url, id, credentials) => {
 				} else if (error.response.status === RequestErrorCodes.FORBIDDEN) {
 					err = {tableError: 'Can not access server using your credentials'};
 				} else {
-					err = {tableError: error.response.statusText};
+					err = {tableError: error.response.data};
 				}
 			} else if (error.request) {
 				err = {tableError: 'The request was made but no response was received.'};

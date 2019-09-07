@@ -24,7 +24,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CargoEntity extends AbstractEntity<Integer> {
+public class CargoEntity extends AbstractEntityWithIntegerId {
 
     /**
      * String representation of the 'mass'

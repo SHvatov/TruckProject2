@@ -3,7 +3,7 @@ import LoginForm from "./components/LoginForm";
 import {connect} from "react-redux";
 import * as PropTypes from "prop-types";
 import Constants from "./utils/Constants";
-import TruckTable from "./components/containers/truck/TruckTable";
+import UserForm from "./components/UserForm";
 
 /**
  * Main entry point of the application.
@@ -30,13 +30,13 @@ class AppComponent extends Component {
 						<LoginForm/>
 					</div>
 				);
-			case Constants.MANAGER:
+			case Constants.MANAGER_USER:
 				return (
 					<div>
-						<TruckTable/>
+						<UserForm/>
 					</div>
 				);
-			case Constants.DRIVER:
+			case Constants.DRIVER_USER:
 				return (
 					<div>
 					</div>

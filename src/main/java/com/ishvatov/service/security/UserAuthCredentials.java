@@ -43,7 +43,8 @@ public class UserAuthCredentials implements UserDetails {
      * @param dbUserEntity database entity with user's credentials.
      */
     public UserAuthCredentials(UserEntity dbUserEntity) {
-        this(dbUserEntity.getId(),
+        this(
+            dbUserEntity.getId(),
             dbUserEntity.getAuthority().getName(),
             dbUserEntity.getPassword()
         );

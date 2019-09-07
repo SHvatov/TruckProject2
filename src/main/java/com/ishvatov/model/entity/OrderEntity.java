@@ -21,7 +21,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderEntity extends AbstractEntity<Integer> {
+public class OrderEntity extends AbstractEntityWithIntegerId {
 
     /**
      * String representation of the 'status'

@@ -23,7 +23,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TruckEntity extends AbstractEntity<String> {
+public class TruckEntity extends AbstractEntityWithStringId {
 
     /**
      * Name of the capacity column in the DB.

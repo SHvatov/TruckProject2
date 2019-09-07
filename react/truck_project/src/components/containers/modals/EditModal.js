@@ -41,7 +41,7 @@ class EditModalComponent extends Component {
 		} = this.props;
 		return (
 			<div>
-				<Button variant='danger' onClick={() => showEditModal(entity)}>
+				<Button variant='primary' onClick={() => showEditModal(entity)}>
 					Edit
 				</Button>
 				<Modal show={status ? status['edit'] : false} size='lg'
@@ -54,6 +54,11 @@ class EditModalComponent extends Component {
 					</Modal.Header>
 					<ModalBody>
 						{this.props.children}
+						<Row className='table-row' hidden={!error['id']}>
+							<Alert variant="danger" hidden={!error['id']} className='custom-alert'>
+								<strong>Error: </strong>{error['id']}
+							</Alert>
+						</Row>
 						<Row Row className='table-row' hidden={!error[entity['id'] + 'Error']}>
 							<Alert variant="danger" hidden={!error[entity['id'] + 'Error']}>
 								<strong>Error: </strong>{error[entity['id'] + 'Error']}
@@ -61,10 +66,10 @@ class EditModalComponent extends Component {
 						</Row>
 					</ModalBody>
 					<Modal.Footer>
-						<Row className='table-row'>
+						<Row>
 							<Col className='table-button'>
-								<SubmitButton variant='danger' onClickHandler={() => updateEntity(buffer)}
-											  isFetching={status ? status['fetch'] : false} text='Delete'/>
+								<SubmitButton variant='primary' onClickHandler={() => updateEntity(buffer)}
+											  isFetching={status ? status['fetch'] : false} text='Update'/>
 							</Col>
 							<Col className='table-button'>
 								<Button variant='danger'

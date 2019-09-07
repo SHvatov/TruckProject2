@@ -19,7 +19,7 @@ public class WaypointDto implements AbstractDto {
     /**
      * Unique identificator of the object.
      */
-    protected Integer id;
+    private Integer id;
 
     /**
      * Defines whether cargo is being loaded or

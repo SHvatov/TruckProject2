@@ -22,7 +22,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WaypointEntity extends AbstractEntity<Integer> {
+public class WaypointEntity extends AbstractEntityWithIntegerId {
 
     /**
      * String representation of the 'action'

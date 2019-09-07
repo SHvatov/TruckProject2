@@ -23,7 +23,11 @@ export const INITIAL_STATE = {
 	 * Does not need to be updated
 	 * on componentDidMount
 	 */
-	status: {},
+	status: {
+		manager: {
+			current: Constants.TRUCKS_TABLE
+		}
+	},
 
 	/** Specific buffer, which is used to store buffer information,
 	 * that has been fetched from the server, such as

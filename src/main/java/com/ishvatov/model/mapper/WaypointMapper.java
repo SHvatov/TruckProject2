@@ -55,6 +55,7 @@ public class WaypointMapper extends AbstractMapper<WaypointEntity, WaypointDto>
     @PostConstruct
     public void setupMapper() {
         this.mapper.createTypeMap(this.dtoClass, this.entityClass).addMappings(m -> {
+            m.skip(WaypointEntity::setId);
             m.skip(WaypointEntity::setOrder);
             m.skip(WaypointEntity::setCargo);
         }).setPostConverter(convertToEntity());

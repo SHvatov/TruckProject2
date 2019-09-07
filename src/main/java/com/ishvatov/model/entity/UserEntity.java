@@ -20,7 +20,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity extends AbstractEntity<String> {
+public class UserEntity extends AbstractEntityWithStringId {
 
     /**
      * String representation of the 'password'
